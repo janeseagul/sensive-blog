@@ -21,7 +21,7 @@ def serialize_post(post):
 def serialize_tag(tag):
     return {
         'title': tag.title,
-        'posts_with_tag': tag.posts_count,
+        'posts_with_tag': tag.posts.count,
     }
 
 
@@ -93,7 +93,7 @@ def tag_filter(request, tag_title):
 
     most_popular_posts = Post.objects.popular().prefetch_related('author')[:5].fetch_with_comments_count()
 
-    related_posts = tag.posts.prefetch_tags()[:20].fetch_with_comments_count()
+    related_posts = tag.posts.prefetch_tags()[:20].prefetch_related('author').fetch_with_comments_count()
 
     context = {
         'tag': tag.title,
